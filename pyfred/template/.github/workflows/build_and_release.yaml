@@ -1,0 +1,33 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Publish binaries
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+        cache: pip
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    - name: Package
+      run: |
+        pyfred package
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: dist/*.alfredworkflow
+        file_glob: true
+        tag: ${{ github.ref }}
+        overwrite: true

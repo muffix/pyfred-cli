@@ -1,0 +1,27 @@
+name: test
+description: Run pyfred-cli tests
+inputs:
+  python-version:  # id of input
+    description: The Python version to use
+    required: false
+    default: "3.10"
+runs:
+  using: composite
+  steps:
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: pip
+    - name: Install dependencies
+      shell: bash
+      run: |
+        pip install -e '.' -e '.[test]'
+    - name: Run pytest
+      shell: bash
+      run: |
+        pytest
+    - name: mypy
+      shell: bash
+      run: |
+        mypy pyfred

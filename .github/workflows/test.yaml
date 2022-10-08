@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    tags-ignore:
+      - v*
+
+permissions:
+  contents: read
+
+jobs:
+  tests-push-pr:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run checks
+        uses: ./.github/actions/lint
+      - name: Run tests
+        uses: ./.github/actions/test
+        with:
+          python-version: ${{ matrix.python-version }}
