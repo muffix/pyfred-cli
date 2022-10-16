@@ -16,7 +16,7 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        pip install -e '.' -e '.[test]'
+        pip install -e '.' -e '.[test]' -e '.[doc]'
     - name: Run pytest
       shell: bash
       run: |
@@ -25,3 +25,8 @@ runs:
       shell: bash
       run: |
         mypy pyfred
+    - name: Documentation is up to date
+      shell: bash
+      run: |
+        pdoc --no-search --output-dir docs pyfred
+        git diff --exit-code docs
