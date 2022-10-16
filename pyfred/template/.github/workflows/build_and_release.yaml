@@ -23,11 +23,7 @@ jobs:
     - name: Package
       run: |
         pyfred package
-    - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v2
+    - name: Create GitHub release
+      uses: softprops/action-gh-release@v1
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: dist/*.alfredworkflow
-        file_glob: true
-        tag: ${{ github.ref }}
-        overwrite: true
+        files: dist/*.alfredworkflow
