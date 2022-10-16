@@ -61,6 +61,10 @@ all dependencies. It can be distributed and imported.
 pyfred package
 ```
 
+### Debug output
+
+The CLI will log debug output if the `--debug` flag is passed before the command.
+
 ## Creating a workflow
 
 The classes from the `pyfred.model` module represent the output expected by Alfred from a script filter.

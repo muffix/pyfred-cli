@@ -11,12 +11,6 @@ from typing import Callable, Optional
 from uuid import uuid4
 from zipfile import ZIP_DEFLATED, ZipFile
 
-logging.basicConfig(
-    format="%(asctime)s %(levelname)-8s %(message)s",
-    level=logging.DEBUG,
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-
 
 def _must_be_run_from_workflow_project_root(
     fn: Callable[[argparse.Namespace], None]
@@ -397,10 +391,14 @@ def _cli():
 
     options:
       -h, --help            show this help message and exit
+      --debug, --no-debug   Whether to enable debug logging (default: False)
     ```
 
     """
     parser = argparse.ArgumentParser(prog="pyfred", description="Build Python workflows for Alfred with ease")
+    parser.add_argument(
+        "--debug", action=argparse.BooleanOptionalAction, default=False, help="Whether to enable debug logging"
+    )
     subparsers = parser.add_subparsers(required=True)
 
     new_parser = subparsers.add_parser("new", help="Create a new workflow")
@@ -439,6 +437,13 @@ def _cli():
     package_parser.set_defaults(func=package)
 
     args = parser.parse_args()
+
+    logging.basicConfig(
+        format="%(asctime)s %(levelname)-8s %(message)s",
+        level=logging.DEBUG if args.debug else logging.INFO,
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
     args.func(args)
 
 
