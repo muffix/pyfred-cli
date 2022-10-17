@@ -30,11 +30,11 @@ def _must_be_run_from_workflow_project_root(
     return decorator
 
 
-def _get_sync_directory() -> Path:
+def _get_sync_directory() -> Optional[Path]:
     """
     :return: The path to Alfred's sync directory
     """
-    prefs_path = Path.home().joinpath("Library/Preferences/com.runningwithcrayons.Alfred-Preferences.plist")
+    prefs_path = Path.home() / "Library" / "Preferences" / "com.runningwithcrayons.Alfred-Preferences.plist"
 
     if not prefs_path.exists():
         raise ValueError("Alfred doesn't appear to be installed")
@@ -43,7 +43,8 @@ def _get_sync_directory() -> Path:
         pl = plistlib.load(f)
 
     if "syncfolder" not in pl:
-        raise ValueError("Alfred's synchronisation directory not set")
+        logging.debug("Alfred's synchronisation directory not set")
+        return None
 
     sync_dir = Path(pl["syncfolder"]).expanduser()
 
@@ -57,9 +58,16 @@ def _get_workflows_directory() -> Path:
     """
     Get the directory where Alfred stores workflows
 
+    Finds the Alfred.alfredpreferences dir either in the sync location set in the Alfred settings or in the default
+    location.
+
     :return: The path to the directory with Alfred's workflows
     """
-    return _get_sync_directory() / "Alfred.alfredpreferences" / "workflows"
+
+    sync_dir = _get_sync_directory()
+    prefs_dir = sync_dir or Path.home() / "Library" / "Application Support" / "Alfred/"
+
+    return prefs_dir / "Alfred.alfredpreferences" / "workflows"
 
 
 def _make_plist(

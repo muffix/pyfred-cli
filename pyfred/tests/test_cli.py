@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from pyfred.cli import link, new, package, vendor
+from pyfred.cli import _get_workflows_directory, link, new, package, vendor
 from pyfred.model import Data, Icon, Key, OutputItem, ScriptFilterOutput, Text, Type
 
 
@@ -51,6 +51,13 @@ def test_new(tmpdir):
     assert len(installed_workflows) == 1
     assert installed_workflows[0].is_symlink()
     assert installed_workflows[0].readlink() == tmpdir / "test_wf" / "workflow"
+
+
+def test_get_workflows_directory():
+    expected = Path.home() / "Library/Application Support/Alfred/Alfred.alfredpreferences/workflows"
+
+    with patch("pyfred.cli._get_sync_directory", return_value=None):
+        assert _get_workflows_directory() == expected
 
 
 def test_full_model_serialises_to_json():
