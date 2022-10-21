@@ -25,8 +25,7 @@ runs:
       shell: bash
       run: |
         mypy pyfred
-    - name: Documentation is up to date
+    - name: Try to generate documentation
       shell: bash
       run: |
-        pdoc --no-search --output-dir docs pyfred
-        git diff --exit-code docs
+        pdoc --output-dir docs pyfred

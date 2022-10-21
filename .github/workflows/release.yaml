@@ -7,7 +7,7 @@ on:
 
 jobs:
   tests-release:
-    name: Tests
+    name: Tests for release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -47,3 +47,42 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.PYPI_TOKEN }}
+
+  generate-docs:
+    name: Publish documentation to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: [publish]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+        cache: pip
+    - name: Install dependencies
+      shell: bash
+      run: |
+        pip install -e '.' -e '.[doc]'
+    - name: Generate docs
+      shell: bash
+      run: |
+        pdoc --output-dir docs pyfred
+    - uses: actions/upload-pages-artifact@v1
+      with:
+        path: docs/
+
+  # Deploy the artifact to GitHub pages.
+  # This is a separate job so that only actions/deploy-pages has the necessary permissions.
+  deploy-docs:
+    needs: [generate-docs]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v1
