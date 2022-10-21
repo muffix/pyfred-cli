@@ -8,6 +8,10 @@ It comes with a CLI that helps bootstrapping, maintaining and packaging the work
 Dependencies are vendored and packaged with the workflow so that they don't need to be installed into the system Python.
 See the [section on adding dependencies](#adding-dependencies) for details.
 
+## Documentation
+
+The documentation is deployed to [GitHub pages](https://muffix.github.io/pyfred-cli).
+
 ## Installation
 
 You can install directly from PyPI:
