@@ -52,7 +52,7 @@ jobs:
         password: ${{ secrets.PYPI_TOKEN }}
 
   generate-docs:
-    name: Publish documentation to GitHub Pages
+    name: Generate docs
     runs-on: ubuntu-latest
     needs: [publish]
 
@@ -78,6 +78,7 @@ jobs:
   # Deploy the artifact to GitHub pages.
   # This is a separate job so that only actions/deploy-pages has the necessary permissions.
   deploy-docs:
+    name: Deploy docs to GitHub Pages
     needs: [generate-docs]
     runs-on: ubuntu-latest
     permissions:
