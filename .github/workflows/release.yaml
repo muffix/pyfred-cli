@@ -28,6 +28,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Tag must point at top of main branch
+      run: |
+        git merge-base --is-ancestor refs/heads/main $GITHUB_REF
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
