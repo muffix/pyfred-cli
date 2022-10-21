@@ -6,6 +6,7 @@ similar project for Rust, [powerpack](https://github.com/rossmacarthur/powerpack
 It comes with a CLI that helps bootstrapping, maintaining and packaging the workflow.
 
 Dependencies are vendored and packaged with the workflow so that they don't need to be installed into the system Python.
+See the [section on adding dependencies](#adding-dependencies) for details.
 
 ## Installation
 
@@ -75,10 +76,23 @@ response to stdout, where it is being picked up by the next input.
 A minimal example for a script filter workflow looks like this:
 
 ```python
+from vendored.pyfred.model import Environment, OutputItem, ScriptFilterOutput
+from vendored.pyfred.workflow import script_filter
+
 @script_filter
 def main(script_path: Path, args_from_alfred: list[str], env: Optional[Environment]) -> ScriptFilterOutput:
     return ScriptFilterOutput(items=[OutputItem(title="Hello Alfred!")])
 ```
+
+## Adding dependencies
+
+When running the workflow, Alfred will use the system Python interpreter to run the script. Third-party libraries are
+not available in the interpreter unless explicitly installed. In order to not pollute the system Python, dependencies
+can be vendored with the workflow using the `pyfred vendor` command. It is also automatically run with `pyfred package`.
+
+If you add dependencies to your `requirements.txt` file, you need to run `pyfred vendor` to download them and make sure
+you import them from the `vendored` directory. For example: `from vendored.reuests import get` instead of
+`from requests import get`.
 
 ## Adding icons
 
