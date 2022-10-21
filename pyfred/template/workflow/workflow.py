@@ -4,8 +4,8 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-from pyfred.model import Environment, OutputItem, ScriptFilterOutput
-from pyfred.workflow import script_filter
+from vendored.pyfred.model import Environment, OutputItem, ScriptFilterOutput
+from vendored.pyfred.workflow import script_filter
 
 
 @script_filter

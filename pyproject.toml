@@ -6,7 +6,8 @@ line-length = 120
 
 [tool.mypy]
 exclude = [
-    "^pyfred/tests"
+    "^pyfred/tests",
+    "^pyfred/template",
 ]
 
 [build-system]
