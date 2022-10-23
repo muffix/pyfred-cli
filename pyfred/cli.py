@@ -235,7 +235,7 @@ def new(args: argparse.Namespace):
             f,
             sort_keys=True,
         )
-    _vendor(root_dir)
+    _vendor(root_dir, upgrade=False)
     _link(relink=True, same_path=False, wf_dir=wf_dir)
 
 
@@ -307,7 +307,7 @@ def _link(relink: bool, same_path: bool, wf_dir: Path):
 
 
 @_must_be_run_from_workflow_project_root
-def vendor(_args: argparse.Namespace):
+def vendor(args: argparse.Namespace):
     """
     Entry point for the `vendor` command
 
@@ -318,20 +318,23 @@ def vendor(_args: argparse.Namespace):
     dependencies in that directory, in addition to the workflow directory.
 
     ```
-    usage: pyfred vendor [-h]
+    usage: pyfred vendor [-h] [--upgrade | --no-upgrade]
 
     options:
-      -h, --help  show this help message and exit
+      -h, --help            show this help message and exit
+      --upgrade, --no-upgrade
+                            Whether to pass `--upgrade` to `pip install` when vendoring (default: False)
     ```
     """
-    _vendor(root_path=Path.cwd())
+    _vendor(root_path=Path.cwd(), upgrade=args.upgrade)
 
 
-def _vendor(root_path: Path) -> bool:
+def _vendor(root_path: Path, upgrade: bool) -> bool:
     """
     Download dependencies from `requirements.txt`
 
     :param root_path: The root path of the workflow project
+    :param upgrade: Whether to pass `--upgrade` to `pip install`
     :return: whether the download was successful
     """
 
@@ -349,6 +352,10 @@ def _vendor(root_path: Path) -> bool:
         f"{root_path}/requirements.txt",
         f"--target={vendored_path}",
     ]
+
+    if upgrade:
+        pip_command.append("--upgrade")
+
     logging.debug("Running pip: python %s", " ".join(pip_command[1:]))
 
     return subprocess.call(pip_command) == 0
@@ -371,7 +378,7 @@ def package(_args: argparse.Namespace):
     """
     root_dir = Path.cwd()
 
-    if not _vendor(Path.cwd()):
+    if not _vendor(Path.cwd(), upgrade=True):
         logging.error("Failed to download dependencies. Exiting")
         exit(1)
 
@@ -424,6 +431,12 @@ def _cli():
     new_parser.set_defaults(func=new)
 
     vendor_parser = subparsers.add_parser("vendor", help="Install workflow dependencies")
+    vendor_parser.add_argument(
+        "--upgrade",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Whether to pass `--upgrade` to `pip install` when vendoring",
+    )
     vendor_parser.set_defaults(func=vendor)
 
     link_parser = subparsers.add_parser("link", help="Create a symbolic link to this workflow in Alfred")
