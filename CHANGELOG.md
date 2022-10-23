@@ -1,9 +1,10 @@
 # Changelog
 
-## UNRELEASED
+## v0.1.5
 
+- Fixed the workflow decorator which imported the incorrect model for validation
 - Added an optional `--upgrade` flag to the `vendor` command which will be passed through to the `pip install` command
-  if set.
+  if set
 
 ## v0.1.4 - 2022-10-23
 

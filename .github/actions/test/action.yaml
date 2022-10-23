@@ -16,7 +16,7 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        pip install -e '.' -e '.[test]' -e '.[doc]'
+        pip install -e '.[test]' -e '.[doc]'
     - name: Run pytest
       shell: bash
       run: |
