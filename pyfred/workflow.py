@@ -33,7 +33,13 @@ def script_filter(fn: Callable[[Path, list[str], Optional[Environment]], ScriptF
         output = fn(Path(path), args, alfred_environment)
 
         if not isinstance(output, ScriptFilterOutput):
-            logging.error("The workflow must return a pyfred.workflow.Output instance")
+            logging.error(
+                "The workflow returned an unexpected type: %s, but expected %s.%s.",
+                type(output),
+                ScriptFilterOutput.__module__,
+                ScriptFilterOutput.__name__,
+            )
+            logging.debug("Unexpected instance of type %s: %s", type(output), repr(output))
             exit(1)
 
         print(json.dumps(output, default=vars_if_set))
