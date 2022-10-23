@@ -98,6 +98,12 @@ If you add dependencies to your `requirements.txt` file, you need to run `pyfred
 need to prefix the import with `vendored` because the template adds that directory to the `PYTHONPATH` variable when the
 workflow runs.
 
+## IDE setup
+
+If you're using an IDE like PyCharm, you'll want to open the generated directory and set up the `workflow` subdirectory
+as the content root. Additionally, you should add the `workflow/vendored` directory as source directory in the PyCharm
+project settings. This helps it resolve the imports correctly.
+
 ## Adding icons
 
 You can add an icon for your workflow to the `workflow` directory in the generated skeleton.
