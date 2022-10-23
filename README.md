@@ -80,8 +80,8 @@ response to stdout, where it is being picked up by the next input.
 A minimal example for a script filter workflow looks like this:
 
 ```python
-from vendored.pyfred.model import Environment, OutputItem, ScriptFilterOutput
-from vendored.pyfred.workflow import script_filter
+from pyfred.model import Environment, OutputItem, ScriptFilterOutput
+from pyfred.workflow import script_filter
 
 @script_filter
 def main(script_path: Path, args_from_alfred: list[str], env: Optional[Environment]) -> ScriptFilterOutput:
@@ -94,9 +94,15 @@ When running the workflow, Alfred will use the system Python interpreter to run 
 not available in the interpreter unless explicitly installed. In order to not pollute the system Python, dependencies
 can be vendored with the workflow using the `pyfred vendor` command. It is also automatically run with `pyfred package`.
 
-If you add dependencies to your `requirements.txt` file, you need to run `pyfred vendor` to download them and make sure
-you import them from the `vendored` directory. For example: `from vendored.reuests import get` instead of
-`from requests import get`.
+If you add dependencies to your `requirements.txt` file, you need to run `pyfred vendor` to download them. You do _not_
+need to prefix the import with `vendored` because the template adds that directory to the `PYTHONPATH` variable when the
+workflow runs.
+
+## IDE setup
+
+If you're using an IDE like PyCharm, you'll want to open the generated directory and set up the `workflow` subdirectory
+as the content root. Additionally, you should add the `workflow/vendored` directory as source directory in the PyCharm
+project settings. This helps it resolve the imports correctly.
 
 ## Adding icons
 
