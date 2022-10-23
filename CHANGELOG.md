@@ -1,5 +1,10 @@
 # Changelog
 
+## UNRELEASED
+
+- Added an optional `--upgrade` flag to the `vendor` command which will be passed through to the `pip install` command
+  if set.
+
 ## v0.1.4 - 2022-10-23
 
 - Fixes a bug where not all files were included in the template
